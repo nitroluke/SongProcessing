@@ -6,7 +6,6 @@
 #
 #########################################
 
-
 ##### $str =~s/hello/goodbye/g  ## s == substitute; g = greedy
 ## this substitues every instance of hello with goodbye given a string
 #\d/ = digit
@@ -38,65 +37,38 @@ open(INFILE, $ARGV[0]) or die "Cannot open $ARGV[0]: $!.\n";
 my @cleanSongs;
 # This loops through each line of the file
 while($line = <INFILE>){
-   @token = split('<SEP>',$line); # a token for each part of the delimited string
-   $song = $token[3];
+   @token = split('<SEP>',$line); # a token array holding each part of the delimited string
 
+   $song = $token[3]; #### THIS MIGHT BE BAD GIVEN BIGGER DATA SETS, DO I NEED TO USE AN ARRAY?####
+### probably not needed, find a different way ###
 
-
-    # Removing everything after these characters from the song title
-    # Optimize this into one regex in the future
-    # $song =~ s/['\(','\{','\[','\\','\/','\_','\-','\:','\"','\`','\+','\+']*//;
-    #line 26419
-    $song =~ s/\(.*//;
-    $song =~ s/\{.*//;
-    $song =~ s/\[.*//;
-    $song =~ s/\\.*//;
-    $song =~ s/\/.*//;
-    $song =~ s/\_.*//;
-    $song =~ s/\-.*//;
-    $song =~ s/\:.*//;
-    $song =~ s/\".*//;
-    $song =~ s/\`.*//;
-    $song =~ s/\+.*//;
-    $song =~ s/\=.*//;
-    $song =~ s/feat. .*//;
-
-   #deleting punctuation from song title
-    $song =~ tr/\?//d;
-    # $song =~ s/\x00/*/g;
-    # $song =~ tr/\x173//d;
-    $song =~ tr/\!//d;
-    # $song =~ tr/\x168//d;#upside down !
-    $song =~ tr/\.//d;
-    $song =~ tr/\;//d;
-    $song =~ tr/\&//d;
-    $song =~ tr/\$//d;
-    $song =~ tr/\@//d;
-    $song =~ tr/\%//d;
-    $song =~ tr/\#//d;
-    $song =~ tr/\|//d;
-
-    push (@cleanSongs, $song);
-     print "$song";
-
+   # Removing everything after these characters from the song title
+   $song =~ s/[\\\/`\(\{\[\*\+\-_=:].*//;     #remove everything after one of the following chars \, /, -, :, (, {, [, _, `,+,=
+   $song =~ s/feat. .*//;
+   $song =~ s/[\?¿!¡.;%@#\|&\$]*//g;  #removes puncuation from the song titles
+                              #remove everything after"feat." from the string
+  # $song =~ tr/[?¿!¡.;%@#|&$]//d;       #remove punctuation from song title
+   print("$song");
+   if($song !~ /([^(\w|\s|\')])/){                  #checks for english words
+       $song = lc($song);
+       push(@cleanSongs, $song);
+      #print "$song";
+     # my @words = split(/ /, $song);
+     # my $numWords = @words;
+     # for (my $i = 0; $i < $numWords; $i++){
+     #    print "$words[$i]\n";
+     # }
+     # print("\n");
+   }
 }
-#while($line = <INFILE>){
-
-    # This prints each line. You will not want to keep this line.
-
-  #  print "$line";
-
-    # YOUR CODE BELOW...
-#}
 
 # Close the file handle
-
 close INFILE;
 
 # At this point (hopefully) you will have finished processing the song
 # title file and have populated your data structure of bigram counts.
 print "\nFile parsed. Bigram model built.\n\n";
-my $arrSize = @cleanSongs;
+my $arrSize = @cleanSongs;    # $arrSize is the size of the array
 print "The number of cleaned up songs  = $arrSize\n";
 # User control loop
 print "Enter a word [Enter 'q' to quit]: ";
@@ -110,3 +82,25 @@ while ($input ne "q"){
 }
 
 # MORE OF YOUR CODE HERE....
+# sub processString{
+#     my ($song) = @_;
+#     # Removing everything after these characters from the song title
+#     $song =~ s/[\\\/\-\:({[_-`+=].*//;     #remove everything after one of the following chars \, /, -, :, (, {, [, _, `,+,=
+#     $song =~ s/feat. .*//;                       #deleting everything after"feat." from the string
+#     $song =~ tr/[?¿!¡.;%@#|&$]//d;    #deleting punctuation from song title
+
+# #     if($song =~/.*'.*/){  # keeps everything with apostraphes in the song array
+# #         push (@cleanSongs, $song);
+# # #        print "$song\n";
+# #     }
+# #     if($song =~ /^[[:alpha:]]+$/){ #removes everything with a non-english char.
+# #         push (@cleanSongs, $song);
+# #   #      print "$song\n";
+# #     }
+
+
+#     #With non-english characters
+#     push (@cleanSongs, $song);
+#     print "$song";
+# }
+
