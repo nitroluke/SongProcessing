@@ -17,8 +17,8 @@
 #my($a,$b) = @_
 #print "hello $b"
 #}
-
 # Replace the string value of the following variable with your names.
+use Data::Dumper qw(Dumper);
 my $name = "<Luke Welna>";
 my $partner = "<?>";
 print "CSCI 305 Lab 1 submitted by $name and $partner.\n\n";
@@ -42,53 +42,74 @@ my $songCount = 0;
 while($line = <INFILE>){
    @token = split('<SEP>',$line); # a token array holding each part of the delimited string
    $song = $token[3];                    # sets the song title to the last part of the token array
-   $song =~ s/[\\\/`\(\{\[\*\+\-_=:].*//;     #add ( remove everything after one of the following chars \, /, -, :, (, {, [, _, `,+,=
+   $song =~ s/\(.+|\[.+|\{.+|\\.+|\/.+|\_.+|\-.+|\:.+|\".+|\`.+|\+.+|\=.+|\*.+//g;
+   #$song =~ s/[\\\/\`\(\{\[\*\+\-_=:].*//;     #add ( remove everything after one of the following chars \, /, -, :, (, {, [, _, `,+,=
    $song =~ s/feat. .*//;                           # removes everything after "feat."
-   $song =~ s/[\?¿!¡.;%@#\|&\$]*//g;  #removes puncuation from the song titles
-
+   $song =~ s/[\?\¿\!\¡\.\;\%\@\#\|\&\$]*//g;  #removes puncuation from the song titles
+   $song =~ s{\s}{ }g;
    if($song !~ /([^(\w|\s|\')])/){                  #checks for english words
 
-     $song = lc($song);                         # sets all songs to lowercase
-     $songCount++;                               # incriment song counter
+      $song = lc($song);                         # sets all songs to lowercase
+      #$songCount++;                               # incriment song counter
 #     push(@cleanSongs, $song);        #pushes all of the songs on the array (just using this for counting)
+     chomp;
      my @words = split(/ /, $song);       # splits the song on spaces and places it in an array called words
      my $numWords = @words;           # sets the number of words in the song title to a variable called $numWords
-     my $frequency = 0;                         # reset frequency
-     for (my $i = 0; $i < $numWords - 1 ; $i++){       # iterates through each song title, word by word
-         # I need to innitialize frequency to the frequency for each specific word
-        # print "$words[$i] \n";
-        $hash{$words[$i]}{$words[$i+1]} = $frequency++;
-        # if(exists $hash{$words[$i]}){  #if there is a word in the hashmap, dont add it just update the frequency... something ain't right
-        #   print "hash[$words[$i]] Exists\n";
-        #   #retrieve the frequency given a word and reset it
-        #   $frequency++;  # this is not the way to do it
-        # }else{  #otherwise add it to the hashmap.
-        #   my $temp = $words[i+1];
-        #   print "adding hash{$words[$i]}{$temp} = $frequency\n";
-        #   $hash{$words[$i]}{$words[$i+1]} = $frequency++;
-      }
+     #my $frequency = 0;                         # reset frequency
+     for (my $i = 0; $i < $numWords - 1; $i++){       # iterates through each song title, word by word
+         my $temp = $words[$i];
+         my $temp2 = $words[$i+1];
+         $hash{$temp}{$temp2}++;                    #increment the frequency for this hashSet by 1;
+         print "$temp ";
+      #   if(exists $hash{$words[$i]}{$words[$i+1]}){  #if this combination exists already, update the frequency... something ain't right
+      #     print "hash{$words[$i]]}{$temp} Exists\n";
+      #     #retrieve the frequency given a word and reset it
+      #     #$frequency = $hash{$words[$i]}{$words[$i+1]}; ## not quite right either?? set current frequency to the frequency for this specific hash
+      #     $hash{$words[$i]}{$words[$i+1]}++;                    #incriment frequency by 1;
+      #   }else{  #otherwise add a new value to the hash.
+      #     $hash{$words[$i]}{$words[$i+1]} = $frequency++;
+      #     print "adding hash{$words[$i]}{$temp} = $frequency\n";
+      # }
      #print "\n";
-   }
+    }
+    print "\n";
+  }
 }
-
 # Close the file handle
 close INFILE;
 
 # At this point (hopefully) you will have finished processing the song
 # title file and have populated your data structure of bigram counts.
 print "\nFile parsed. Bigram model built.\n\n";
-      #my $arrSize = @cleanSongs;    # $arrSize is the size of the array ************remove this eventually
-      print "The number of cleaned up songs = $songCount\n";
-      # User control loop
+print "The number of cleaned up songs = $songCount\n";
+# User control loop
 while ($input ne "q"){
   # Replace these lines with some useful code
   print "Enter a word [Enter 'q' to quit]: ";
   $input = <STDIN>;
   chomp($input);
-  print "\n";
-  print "Value Exists, but may be undefined \n"  if exists      $hash{$input}; ## something isnt working correctly
-  print "Value is Defined, but may be false \n"    if defined  $hash{$input};     ## always prints
-  print "Value is True at hash key $input \n\n"        if                $hash{$input};
+  my %values = %{$hash{$input}};
+  my $numValues = @values;
+  my %keys = keys %{$hash{$input}};
+  if($input eq "q"){
+    exit 0;
+  }
+  foreach $input(keys %values){
+    my $count = $values{$input};
+    print "$input $count \n";
+  }
+
+  # for (my $i = 0; $i< $numValues; $i++){
+  #   print("$input -> $values[$i] -> $keys[$i]");
+  # }
+  #print($hash{$input});
+
+  #print Dumper %hash;
+
+  # print "\n";
+  # print "Value Exists, but may be undefined \n"  if exists      $hash{$input}; ## something isnt working correctly
+  # print "Value is Defined, but may be false \n"    if defined  $hash{$input};     ## always prints
+  # print "Value is True at hash key $input \n\n"        if                $hash{$input};
 
 #Outline for what i will need to do
 # if (exists $hash{$input}){
@@ -102,12 +123,19 @@ while ($input ne "q"){
 }
 
 # MORE OF YOUR CODE HERE....
-sub getFrequency{
+# sub getFrequency{   #unnecessary subroutine
+#   my $arg1 = shift @_;
+#   $frequency = shift @_;
+#   if(Arg1 eq ' '){
+#     $frequency = 0;
+#   }
+
+#   my $uniqueNewyork = (split(/ /, Arg1))[-1];
+#   print "\n$uniqueNewyork\n";
+#   return $uniqueNewyork;
+# }
 
 
-
-
-}
 
 # sub processString{
 #     my ($song) = @_;
