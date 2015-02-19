@@ -1,15 +1,73 @@
 Lab Questions
 
 1) birthday
+
 2) song
+
 3) 57
+
 4) love
+
 5)13
+
 6)happy birthday song for the world is a little girl in the world is a little girl in the world is
+
 7)sad song for the world is a little girl in the world is a little girl in the world is a
 
-# FIX THIS OUTPUT?! I think this is right though #
 8)hey hey hey hey hey hey hey hey hey hey hey hey hey hey hey hey hey hey hey hey hey
 
 9)little girl in the world is a little girl in the world is a little girl in the world is a
+
 10) it almost always goes to "is a little girl in the world" repeating
+
+11) amore mio babbino caro gianni schicchi
+
+12) love you are you are you are you are you are you are you are you are you are you are
+
+13) little girl like you are you are you are you are you are you are you are you are you are
+
+14) There are words like "you" and "are" when the most common things that follow it are each other, or
+there are other cases when there are a sequence of words that follow each other
+
+15)  well I could just use "amore" as a case where it terminates, however another case
+is "hi" which produces "hi lili marleen 2006".
+
+16) essentially what i do is create another hashmap of an array that contains all of the words that are
+currently in my newly generated song title.  Each time that I add a new word, I check to see if what I
+am adding is contained in my new hashmap.  If it is, I dont add it.  This means that no song title can have a
+repeating word in it, which I think is okay.  The song stops generating when there is a word that doesnt have
+another that follows it.  One downfall to this, is I get massive song titles, so they are more like verses in a song....
+
+17)montana sacra nova scotia
+
+18) The first time I run bob i get:
+
+bob marley medley 1 allegro con la vida es el amor de mi corazon loco por ti amo solo tu me down road blues
+night long way you are my heart is it up your love song about that i don't know what do we go away manger
+throne grace god bless child mine all over rainbow connection 17 d minor op 64 bytes
+
+19) The second and the third time are the same as the first. However, before I implemented my fix to reduce
+repeating words i was getting output x the first time, output y a second time, and every try after would continue
+to be x.  While i don't know exactly why it was happening in this case, Hashmaps aren't sorted, so It could have
+been retrieving a different following word that had the same frequency, however I dont know why It was different
+the second run and then back to the same output for the first run after.
+
+20) "op 64 bytes" is one of the shortest and my favorite so far, many of my
+song titles are incomprehensible.  Also "queer notions" is pretty good as well.
+
+21) how fast it is to script something up is probably the biggest plus.  all of the build in functions are nice as well, sort, keys,
+results.  Building the hashmap was too easy once you figured it out,  in a language like java, it would have had to be much
+more verbose.
+
+22) slow, perl is really slow.  For this project it wasnt too bad, but because it is a scripting language, it isnt meant for writing
+huge verbose programs.  Something like this, written in c (while it probably would have taken longer to write), the hashmap
+population would have been almost instant, even for the very large word list.
+
+23)I actually really liked this lab.  I am a little rusty on data structures and it was cool to implement a new data structure with a
+programming language I have never used.  The topic is also really usefull, dictionarys are great and being able to use a
+hashmap of hashmaps for that is super importnant.
+
+24) hmm, tough question.  im not too sure actually, with all the research behind it I and implentation. I would say 20hrs is a
+conservative estimate.
+
+25)
